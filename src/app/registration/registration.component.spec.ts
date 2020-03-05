@@ -35,25 +35,50 @@ describe('RegistrationComponent', () => {
 
   it('should create a FormGroup comprised of FormControls', () => {
     component.ngOnInit();
-    
+    expect(component.registerForm instanceof FormGroup).toBe(true);
+    expect(Object.keys(component.registerForm.controls).length).toEqual(7);
+    expect(Object.keys(component.registerForm.controls)).toEqual([
+      'title', 'firstName', 'lastName', 'email', 'password', 'confirmPassword', 'acceptTerms'
+    ]);
 });
 
 it('should return false if the form control is not valid', () => {
   component.ngOnInit();
-  
+  expect(component.registerForm.valid).toBe(false);
 });
 
-it('should return true for valid if the form control is valid', () => {
+it('should return true if the form control is valid', () => {
   component.ngOnInit();
+  component.registerForm.controls['title'].setValue('Ms');
+  component.registerForm.controls['firstName'].setValue('Codergirl');
+  component.registerForm.controls['lastName'].setValue('Hero');
+  component.registerForm.controls['email'].setValue('codergirl@codergirl.com');
+  component.registerForm.controls['password'].setValue('codergirl');
+  component.registerForm.controls['confirmPassword'].setValue('codergirl');
+  component.registerForm.controls['acceptTerms'].setValue(true);
+  expect(component.registerForm.valid).toBe(true);
 
+  component.onSubmit();
+  expect(component.submitted).toBe(true);
+  expect (routerSpy.navigateByUrl).toHaveBeenCalledWith ('confirmation');
 });
 
 
 describe('invalid form', () => {
 
-it('should return valid as false if the form control is invalid', () => {
+it('should return false if the form control is invalid', () => {
   component.ngOnInit();
-  
+  component.registerForm.controls['title'].setValue('Ms');
+  component.registerForm.controls['firstName'].setValue('Codergirl');
+  component.registerForm.controls['lastName'].setValue('Hero');
+  component.registerForm.controls['email'].setValue('codergirl');
+  component.registerForm.controls['password'].setValue('codergirl');
+  component.registerForm.controls['confirmPassword'].setValue('codergirl');
+  component.registerForm.controls['acceptTerms'].setValue(true);
+  expect(component.registerForm.valid).toBe(false);
+  component.onSubmit();
+  expect(component.submitted).toBe(true);
+  expect (routerSpy.navigateByUrl).toHaveBeenCalledTimes(0);
 });
 });
 });
